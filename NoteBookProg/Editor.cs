@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -12,7 +12,6 @@ namespace NoteBookProg
 {
     internal class Editor : TabControl
     {
-        public bool SavedStatus {get; set;}
         // Выбранная вкладка
         private Document SelectedDoc
         {
@@ -27,7 +26,6 @@ namespace NoteBookProg
             this.TabPages.Add(document);
             document.Text = "Untilted.txt";
             this.SelectedTab = document;
-            SavedStatus = false;
         }
         //CloseActiveDoc();
         public void OpenDoc()
@@ -39,7 +37,6 @@ namespace NoteBookProg
             {
                 NewDoc();
                 SelectedDoc.Open(openFileDialog.FileName);
-                SavedStatus= false;
             }
                 
         }
@@ -50,7 +47,7 @@ namespace NoteBookProg
             else
             {
                 SelectedDoc.Save();
-                SavedStatus= true;
+                
             }
                 
             
@@ -64,14 +61,14 @@ namespace NoteBookProg
             if(saveFileDialog.ShowDialog()==DialogResult.OK) 
             {
                 SelectedDoc.SaveAs(saveFileDialog.FileName);
-                SavedStatus = true;
+                
             }
            
 
         }
         public void CloseDoc()
         {
-            if(SelectedDoc.Text != null & SavedStatus == false){//)
+            if(SelectedDoc.Text != null & SelectedDoc.Modified){//)
                 DialogResult result = MessageBox.Show(
                 "Вы действительно хотите закрыть документ не сохранясь?",
                 "Сообщение",
