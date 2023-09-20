@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -43,6 +43,7 @@ namespace NoteBookProg
             {
                 RichTextBox selectedRtb = (RichTextBox)this.Controls["rtb"];
                 selectedRtb.Text = fileText;
+
             }
             stream.Close();
         }
@@ -52,6 +53,9 @@ namespace NoteBookProg
             byte[] buffer = Encoding.Default.GetBytes(reciveTextBox.Text);
             stream.Write(buffer, 0, buffer.Length);
             stream.Close();
+            reciveTextBox.Modified = false;
+
+
         }
         public void SaveAs(string FileName) 
         {
@@ -62,6 +66,7 @@ namespace NoteBookProg
             Path = FileName;
             ShortName = Path.Substring(1 + Path.LastIndexOf('\\'));
             this.Text = ShortName;
+            reciveTextBox.Modified = false;
         }
         public RichTextBox reciveTextBox
         {
@@ -72,6 +77,12 @@ namespace NoteBookProg
             }
         }
         
-        //bool Modified;
+        public bool Modified
+        {
+            get
+            {
+                return reciveTextBox.Modified;
+            }
+        }
     }
 }
