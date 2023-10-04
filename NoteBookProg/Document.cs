@@ -54,9 +54,8 @@ namespace NoteBookProg
             stream.Write(buffer, 0, buffer.Length);
             stream.Close();
             reciveTextBox.Modified = false;
-
-
         }
+        
         public void SaveAs(string FileName) 
         {
             Stream stream = new FileStream(FileName, FileMode.Create);
@@ -68,6 +67,7 @@ namespace NoteBookProg
             this.Text = ShortName;
             reciveTextBox.Modified = false;
         }
+        
         public RichTextBox reciveTextBox
         {
             get
