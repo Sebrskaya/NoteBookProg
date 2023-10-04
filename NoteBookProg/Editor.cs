@@ -12,8 +12,8 @@ namespace NoteBookProg
 {
     internal class Editor : TabControl
     {
-        // Выбранная вкладка
-        private Document SelectedDoc
+        public RecentList resentList = new RecentList();
+        private Document SelectedDoc// Выбранная вкладка
         {
             get
             {
@@ -27,7 +27,7 @@ namespace NoteBookProg
             document.Text = "Untilted.txt";
             this.SelectedTab = document;
         }
-        //CloseActiveDoc();
+        
         public void OpenDoc()
         {
             OpenFileDialog openFileDialog= new OpenFileDialog();//вызов окошка по выбору файла
@@ -70,13 +70,19 @@ namespace NoteBookProg
         {
             if(SelectedDoc.Text != null & SelectedDoc.Modified){//)
                 DialogResult result = MessageBox.Show(
-                "Вы действительно хотите закрыть документ не сохранясь?",
+                "Хотите ли сохранить " + SelectedDoc.ShortName + " перед закрытием?",
                 "Сообщение",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Exclamation,
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question,
                 MessageBoxDefaultButton.Button1,
                 MessageBoxOptions.DefaultDesktopOnly);
                 if (result == DialogResult.Yes)
+                {
+                    SaveDoc();
+                    this.TabPages.Remove(SelectedTab);
+                }
+                    
+                if (result == DialogResult.No)
                     this.TabPages.Remove(SelectedTab);
             }
             else 
@@ -86,11 +92,22 @@ namespace NoteBookProg
         }
         public void Exit()
         {
-            //if все сохранены, то выход
+            while (this.TabPages.Count > 0) 
+            {
+                this.SelectTab(TabPages[0]);
+                CloseDoc();
+            }
                 Application.Exit();
         }
-        //OpenDocByRecentIndex(int Index);
-        //bool DocOpened(FName);
-        //RecentList resentList { get;}
+
+
+        public void OpenDocByRecentIndex(int Index)//открывает файл из листа
+        {
+
+        }
+        public bool DocOpened(String Path)
+        {
+            return false;
+        }
     }
 }
