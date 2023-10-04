@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Drawing.Printing;
+using System.Xml.Serialization;
 
 namespace NoteBookProg
 {
@@ -61,6 +62,31 @@ namespace NoteBookProg
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             editor.Exit();
+        }
+        private void AddFileNamesToRecentMenu()
+        {
+            recentToolStripMenuItem.DropDownItems.Clear();
+            for (int i = 0; i < editor.resentList.Count; i++)
+            {
+                recentToolStripMenuItem.DropDownItems.Add(editor.resentList[i]).Click += new EventHandler(RecentListItem_Click);
+            }
+        }
+        private void RecentListItem_Click(object sender, EventArgs e)
+        {
+            editor.resentList.RecentListAddNotify += AddFileNamesToRecentMenu;//обработчик события 
+            var recentListItem = (ToolStripMenuItem)sender;
+            int index = 0;
+
+            foreach (ToolStripMenuItem item in recentToolStripMenuItem.DropDownItems)
+            {
+                if (item.Text.Equals(recentListItem.Text))
+                {
+                    break;
+                }
+                index++;
+            }
+
+            editor.OpenDocByRecentIndex(index);
         }
     }
 }
