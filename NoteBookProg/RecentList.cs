@@ -13,14 +13,28 @@ namespace NoteBookProg
         public RecentListAddDelegate RecentListAddNotify;
         public new void Add(String Path)
         {
-            RecentListAddNotify?.Invoke();
+            
+                if (this.Count < 5 )
+                {
+                base.Add(Path);
+                RecentListAddNotify?.Invoke();
+                
+                }
+                else
+                {
+
+                }
+            
+            
             //макс 5 элементов листе
             //если мы открываем файл и он уже есть в списке, то мы его поднимаем на верх 
+            
 
         }
         public void SaveData()
         {
             //записать элементы листа в файл
+
         }
         public void LoadData()
         {
