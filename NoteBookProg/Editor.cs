@@ -100,10 +100,10 @@ namespace NoteBookProg
                 Application.Exit();
         }
 
-
         public void OpenDocByRecentIndex(int Index)//открывает файл из листа
         {
-
+            OpenDoc();
+            resentList.Shuffle(Index);
         }
         public bool DocOpened(String Path)
         {
