@@ -61,6 +61,7 @@ namespace NoteBookProg
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             editor.SaveDocAs();
+            AddFileNamesToRecentMenu();
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -74,6 +75,11 @@ namespace NoteBookProg
             {
                 recentToolStripMenuItem.DropDownItems.Add(editor.resentList[i]).Click += new EventHandler(RecentListItem_Click);
             }
+        }
+
+        private void RefreshRecentList()
+        {
+
         }
         private void RecentListItem_Click(object sender, EventArgs e)
         {
@@ -91,6 +97,12 @@ namespace NoteBookProg
             }
 
             editor.OpenDocByRecentIndex(index);
+        }
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            
+            e.Cancel = !editor.Exit();
+
         }
     }
 }
