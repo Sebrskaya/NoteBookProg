@@ -69,13 +69,15 @@ namespace NoteBookProg
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
                 SelectedDoc.SaveAs(saveFileDialog.FileName);
-
+                resentList.Add(saveFileDialog.FileName);
             }
 
 
         }
         public void CloseDoc()
         {
+            if (SelectedDoc == null)
+                return;
             if (SelectedDoc.Text != null & SelectedDoc.Modified)
             {//)
                 DialogResult result = MessageBox.Show(
@@ -93,21 +95,32 @@ namespace NoteBookProg
 
                 if (result == DialogResult.No)
                     this.TabPages.Remove(SelectedTab);
+
+                if (result == DialogResult.Cancel)
+                    throw new CancelException();
+
+               
             }
             else
             {
                 this.TabPages.Remove(SelectedTab);
             }
         }
-        public void Exit()
+        public bool Exit()
         {
-            while (this.TabPages.Count > 0)
+            try
             {
-                this.SelectTab(TabPages[0]);
-                CloseDoc();
+                while (this.TabPages.Count > 0)
+                {
+                    this.SelectTab(TabPages[0]);
+                    CloseDoc();
+                }
+                Application.Exit();
+                resentList.SaveData();
+                return true;
             }
-            Application.Exit();
-            resentList.SaveData();
+            catch (CancelException) { return false; }
+            
         }
 
         public void OpenDocByRecentIndex(int Index)//открывает файл из листа
