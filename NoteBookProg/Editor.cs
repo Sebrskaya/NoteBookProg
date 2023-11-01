@@ -1,12 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-
 
 namespace NoteBookProg
 {
@@ -22,24 +15,41 @@ namespace NoteBookProg
         }
         public void NewDoc()
         {
-            Document document= new Document();
+            Document document = new Document();
             this.TabPages.Add(document);
             document.Text = "Untilted.txt";
             this.SelectedTab = document;
         }
-        
+
         public void OpenDoc()
         {
-            OpenFileDialog openFileDialog= new OpenFileDialog();//вызов окошка по выбору файла
+            OpenFileDialog openFileDialog = new OpenFileDialog();//вызов окошка по выбору файла
             openFileDialog.InitialDirectory = "C:\\Users\\egori\\OneDrive\\Рабочий стол";//дефолт путь
             openFileDialog.Filter = "Текстовые файлы (*.txt)|*.txt|Все файлы (*.*)|*.*\"\"";//Чёт не работает
             if (openFileDialog.ShowDialog() == DialogResult.OK)//открытие окна для выбора, ок закрывает с результатом
             {
-                NewDoc();
-                SelectedDoc.Open(openFileDialog.FileName);
+                CreateTab(openFileDialog.FileName);
             }
-                
+
         }
+
+        public void CreateTab( string FileName) 
+        {
+            //проверка на налисие документа(пройти по всем открытым вкладкам и сравнивать пути)
+            foreach (TabPage tab in this.TabPages) 
+            {
+                if ((tab as Document).Path is null) continue;
+                if (FileName == (tab as Document).Path)
+                {
+                    this.SelectedTab = tab;
+                    return;
+                }     
+            }
+            NewDoc();
+            SelectedDoc.Open(FileName);
+            resentList.Add(FileName);
+        }
+
         public void SaveDoc()
         {
             if (SelectedDoc.Text.Contains("Untilted.txt"))
@@ -47,28 +57,27 @@ namespace NoteBookProg
             else
             {
                 SelectedDoc.Save();
-                
             }
-                
-            
         }
-        public void SaveDocAs() 
+
+        public void SaveDocAs()
         {
-            
-            SaveFileDialog saveFileDialog= new SaveFileDialog();
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "Text Documents|*.txt";
             saveFileDialog.DefaultExt = "txt";
-            if(saveFileDialog.ShowDialog()==DialogResult.OK) 
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
                 SelectedDoc.SaveAs(saveFileDialog.FileName);
-                
+
             }
-           
+
 
         }
         public void CloseDoc()
         {
-            if(SelectedDoc.Text != null & SelectedDoc.Modified){//)
+            if (SelectedDoc.Text != null & SelectedDoc.Modified)
+            {//)
                 DialogResult result = MessageBox.Show(
                 "Хотите ли сохранить " + SelectedDoc.ShortName + " перед закрытием?",
                 "Сообщение",
@@ -81,29 +90,29 @@ namespace NoteBookProg
                     SaveDoc();
                     this.TabPages.Remove(SelectedTab);
                 }
-                    
+
                 if (result == DialogResult.No)
                     this.TabPages.Remove(SelectedTab);
             }
-            else 
+            else
             {
                 this.TabPages.Remove(SelectedTab);
             }
         }
         public void Exit()
         {
-            while (this.TabPages.Count > 0) 
+            while (this.TabPages.Count > 0)
             {
                 this.SelectTab(TabPages[0]);
                 CloseDoc();
             }
-                Application.Exit();
+            Application.Exit();
+            resentList.SaveData();
         }
 
         public void OpenDocByRecentIndex(int Index)//открывает файл из листа
         {
-            OpenDoc();
-            resentList.Shuffle(Index);
+            CreateTab(resentList[Index]);
         }
         public bool DocOpened(String Path)
         {
