@@ -28,7 +28,7 @@ namespace NoteBookProg
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            editor.resentList.RecentListAddNotify += AddFileNamesToRecentMenu;//обработчик события
+            editor.resentList.RecentListAddNotify += AddFileNamesToRecentMenu;
             editor.OpenDoc();
         }
 
@@ -48,6 +48,9 @@ namespace NoteBookProg
             mainPanel.Controls.Add(editor);
             editor.Dock = DockStyle.Fill;
             editor.NewDoc();
+            editor.resentList.LoadData();
+            AddFileNamesToRecentMenu();
+            
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
